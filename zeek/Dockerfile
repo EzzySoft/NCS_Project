@@ -20,4 +20,4 @@ RUN sed -i '/<localfile>/,/<\/localfile>/d' /var/ossec/etc/ossec.conf && \
       <location>/var/log/zeek/current/*.log</location>\n\
     </localfile>' /var/ossec/etc/ossec.conf
 
-CMD ["/usr/sbin/wazuh-agent", "-f"]
+CMD ["/var/ossec/bin/wazuh-agentd", "-f"]
