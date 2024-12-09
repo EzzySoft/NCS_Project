@@ -1,6 +1,4 @@
 # Wazuh App Copyright (C) 2017, Wazuh Inc. (License GPLv2)
-version: '3.7'
-
 services:
   wazuh.manager:
     image: wazuh/wazuh-manager:4.9.2
@@ -86,7 +84,7 @@ services:
       - wazuh.manager:wazuh.manager
   zeek:
     image: blacktop/zeek:latest
-    command: [ "zeekctl", "deploy" ]
+    command: [ "/usr/local/zeek/bin/zeekctl", "deploy" ]
     volumes:
       - zeek-logs:/var/log/zeek
     restart: always
