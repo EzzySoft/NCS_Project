@@ -83,8 +83,8 @@ services:
       - wazuh.indexer:wazuh.indexer
       - wazuh.manager:wazuh.manager
   zeek:
-    image: blacktop/zeek:latest
-    command: [ "/usr/local/zeek/bin/zeekctl", "deploy" ]
+    image: zeek/zeek:lts
+    command: [ "zeekctl", "deploy" ]
     volumes:
       - zeek-logs:/var/log/zeek
     restart: always
