@@ -93,7 +93,7 @@ services:
 
   wazuh.agent.zeek:
     build:
-      context: /zeek
+      context: ./zeek
     depends_on:
       - wazuh.manager
       - zeek
