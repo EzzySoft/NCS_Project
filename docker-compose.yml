@@ -83,10 +83,11 @@ services:
       - wazuh.indexer:wazuh.indexer
       - wazuh.manager:wazuh.manager
   zeek:
-    image: zeek/zeek:lts
-    command: [ "zeekctl", "deploy" ]
+    build:
+      context: ./zeek
+      dockerfile: Dockerfile.zeek
     volumes:
-      - zeek-logs:/var/log/zeek
+      - zeek-logs:/usr/local/zeek/logs
     restart: always
 
   wazuh.agent.zeek:
