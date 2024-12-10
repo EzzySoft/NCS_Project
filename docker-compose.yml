@@ -1,10 +1,10 @@
-# Wazuh App Copyright (C) 2017, Wazuh Inc. (License GPLv2)
+version: '3.9'
+
 services:
   wazuh.manager:
     image: wazuh/wazuh-manager:4.9.2
     hostname: wazuh.manager
     restart: always
-
     ports:
       - "1514:1514"
       - "1515:1515"
@@ -60,7 +60,7 @@ services:
     hostname: wazuh.dashboard
     restart: always
     ports:
-      - 443:5601
+      - "443:5601"
     environment:
       - INDEXER_USERNAME=admin
       - INDEXER_PASSWORD=SecretPassword
@@ -82,6 +82,7 @@ services:
     links:
       - wazuh.indexer:wazuh.indexer
       - wazuh.manager:wazuh.manager
+
   zeek_agent:
     build: ./zeek_agent
     hostname: zeek_agent
@@ -89,8 +90,10 @@ services:
       - wazuh.manager
     environment:
       - WAZUH_MANAGER_ADDRESS=wazuh.manager
+      - WAZUH_API_TOKEN=<YOUR_WAZUH_API_TOKEN>
     volumes:
       - ./zeek_logs:/opt/zeek/logs/current
+
 volumes:
   wazuh_api_configuration:
   wazuh_etc:
@@ -106,4 +109,4 @@ volumes:
   wazuh-indexer-data:
   wazuh-dashboard-config:
   wazuh-dashboard-custom:
-  zeek-logs:
+\
