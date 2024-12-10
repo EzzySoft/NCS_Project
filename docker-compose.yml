@@ -1,6 +1,7 @@
-version: '3.9'
+version: '3.7'
 
 services:
+  # Existing services (wazuh.manager, wazuh.indexer, wazuh.dashboard)
   wazuh.manager:
     image: wazuh/wazuh-manager:4.9.2
     hostname: wazuh.manager
@@ -83,34 +84,35 @@ services:
       - wazuh.indexer:wazuh.indexer
       - wazuh.manager:wazuh.manager
 
+  # New Zeek Service
   zeek:
     image: zeek/zeek:latest
-    hostname: zeek
+    container_name: zeek
     restart: always
     networks:
       - wazuh_network
     volumes:
-      - zeek_logs:/usr/local/zeek/logs
-      - ./config/zeek/site:/usr/local/zeek/share/zeek/site
-    command: ["zeek", "-i", "eth0", "local"]
+      - zeek_logs:/opt/zeek/logs
+      - ./config/zeek/scripts:/usr/local/zeek/share/zeek/site
+      # Mount network interface or pcap files as needed
+    command: zeek -C -i eth0 local.zeek
 
-  wazuh.agent:
+  wazuh-agent:
     image: wazuh/wazuh-agent:4.9.2
-    hostname: wazuh.agent
+    container_name: wazuh-agent
+    hostname: wazuh-agent
     restart: always
     networks:
       - wazuh_network
     environment:
       - MANAGER_ADDRESS=wazuh.manager
       - MANAGER_PORT=1514
-      - MANAGER_PROTOCOL=udp
-      - REGISTER_AGENT=true
-      - AGENT_NAME=wazuh-agent
-      - AGENT_GROUP=default
-      - WAZUH_AGENT_PASSWORD=AgentPassword123
+      - AGENT_NAME=zeek-agent
+      - REGISTER_AGENT=yes
     volumes:
-      - zeek_logs:/var/log/zeek
       - wazuh_agent_config:/var/ossec/etc
+      - zeek_logs:/var/ossec/logs/zeek
+      - ./config/wazuh_agent/ossec.conf:/var/ossec/etc/ossec.conf:ro
     depends_on:
       - wazuh.manager
 
