@@ -82,26 +82,15 @@ services:
     links:
       - wazuh.indexer:wazuh.indexer
       - wazuh.manager:wazuh.manager
-  zeek:
-    build:
-      context: ./zeek
-      dockerfile: Dockerfile.zeek
-    volumes:
-      - zeek-logs:/usr/local/zeek/logs
-    restart: always
-
-  wazuh.agent.zeek:
-    build:
-      context: ./zeek
+  zeek_agent:
+    build: ./zeek_agent
+    hostname: zeek_agent
     depends_on:
       - wazuh.manager
-      - zeek
     environment:
-      - WAZUH_MANAGER_IP=wazuh.manager
-      - WAZUH_AGENT_NAME=zeek-agent
+      - WAZUH_MANAGER_ADDRESS=wazuh.manager
     volumes:
-      - zeek-logs:/var/log/zeek:ro
-    restart: always
+      - ./zeek_logs:/opt/zeek/logs/current
 volumes:
   wazuh_api_configuration:
   wazuh_etc:
