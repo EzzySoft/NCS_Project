@@ -89,7 +89,7 @@ services:
     depends_on:
       - wazuh.manager
     environment:
-      - WAZUH_MANAGER_ADDRESS=wazuh.manager
+      - WAZUH_MANAGER_ADDRESS=wazuh.manager:55000
       - WAZUH_API_TOKEN=eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ3YXp1aCIsImF1ZCI6IldhenVoIEFQSSBSRVNUIiwibmJmIjoxNzMzODUwNjk2LCJleHAiOjE3MzM4NTE1OTYsInN1YiI6IndhenVoLXd1aSIsInJ1bl9hcyI6ZmFsc2UsInJiYWNfcm9sZXMiOlsxXSwicmJhY19tb2RlIjoid2hpdGUifQ.AaXCSRZgHZQhU-C9NnOvC5wHa-OzQnwymfcBUI9jDOxf5Co8HwifaRRkjvmDp5DV6dJ4mA51QhfkJCs8hrevOP6LAXx-z7hqqr9phn5pYIgJn9SUz3f-ez2znsVNjPXeTfB8CRec1Tbfinf_g3G1iiUhQocWh5rfwbTT9t1ZEMVk6vgu
     volumes:
       - ./zeek_logs:/opt/zeek/logs/current
