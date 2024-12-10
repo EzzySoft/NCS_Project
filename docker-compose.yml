@@ -83,7 +83,40 @@ services:
       - wazuh.indexer:wazuh.indexer
       - wazuh.manager:wazuh.manager
 
+  zeek:
+    image: zeek/zeek:latest
+    hostname: zeek
+    restart: always
+    networks:
+      - wazuh_network
+    volumes:
+      - zeek_logs:/usr/local/zeek/logs
+      - ./config/zeek/site:/usr/local/zeek/share/zeek/site
+    command: ["zeek", "-i", "eth0", "local"]
 
+  wazuh.agent:
+    image: wazuh/wazuh-agent:4.9.2
+    hostname: wazuh.agent
+    restart: always
+    networks:
+      - wazuh_network
+    environment:
+      - MANAGER_ADDRESS=wazuh.manager
+      - MANAGER_PORT=1514
+      - MANAGER_PROTOCOL=udp
+      - REGISTER_AGENT=true
+      - AGENT_NAME=wazuh-agent
+      - AGENT_GROUP=default
+      - WAZUH_AGENT_PASSWORD=AgentPassword123
+    volumes:
+      - zeek_logs:/var/log/zeek
+      - wazuh_agent_config:/var/ossec/etc
+    depends_on:
+      - wazuh.manager
+
+networks:
+  wazuh_network:
+    driver: bridge
 
 volumes:
   wazuh_api_configuration:
@@ -100,3 +133,5 @@ volumes:
   wazuh-indexer-data:
   wazuh-dashboard-config:
   wazuh-dashboard-custom:
+  zeek_logs:
+  wazuh_agent_config:
