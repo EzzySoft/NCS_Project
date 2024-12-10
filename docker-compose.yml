@@ -98,7 +98,8 @@ services:
     command: zeek -C -i eth0 local.zeek
 
   wazuh-agent:
-    image: wazuh/wazuh-agent:4.9.2
+    build:
+      context: ./agent
     container_name: wazuh-agent
     hostname: wazuh-agent
     restart: always
