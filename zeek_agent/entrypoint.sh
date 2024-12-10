@@ -1,4 +1,5 @@
 #!/bin/sh
-zeekctl deploy || true
 
-/var/ossec/bin/wazuh-agent -f
+zeekctl deploy
+
+/usr/bin/wazuh-agent -f
