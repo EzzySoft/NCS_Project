@@ -1,7 +1,4 @@
-version: '3.7'
-
 services:
-  # Existing services (wazuh.manager, wazuh.indexer, wazuh.dashboard)
   wazuh.manager:
     image: wazuh/wazuh-manager:4.9.2
     hostname: wazuh.manager
@@ -84,7 +81,6 @@ services:
       - wazuh.indexer:wazuh.indexer
       - wazuh.manager:wazuh.manager
 
-  # New Zeek Service
   zeek:
     image: zeek/zeek:latest
     container_name: zeek
@@ -93,8 +89,10 @@ services:
       - wazuh_network
     volumes:
       - zeek_logs:/opt/zeek/logs
-      - ./config/zeek/scripts:/usr/local/zeek/share/zeek/site
-      # Mount network interface or pcap files as needed
+      - ./config/zeek/scripts:/usr/local/zeek/share/zeek/site:ro
+    environment:
+      - ZEEK_LOG_DIR=/opt/zeek/logs
+    network_mode: host
     command: zeek -C -i eth0 local.zeek
 
   wazuh-agent:
@@ -109,10 +107,9 @@ services:
       - MANAGER_ADDRESS=wazuh.manager
       - MANAGER_PORT=1514
       - AGENT_NAME=zeek-agent
-      - REGISTER_AGENT=yes
     volumes:
       - wazuh_agent_config:/var/ossec/etc
-      - zeek_logs:/var/ossec/logs/zeek
+      - zeek_logs:/var/ossec/logs/zeek:ro
       - ./config/wazuh_agent/ossec.conf:/var/ossec/etc/ossec.conf:ro
     depends_on:
       - wazuh.manager
